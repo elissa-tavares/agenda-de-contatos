@@ -1,41 +1,48 @@
 import java.util.Scanner;
 
 public class Main {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-
     public static void main(String[] args) {
-        while (true) {
-            menu();
-            receiveMenuOption();
-        }
-    }
-
-    public static void receiveMenuOption() {
         Scanner scanner = new Scanner(System.in);
-        long option;
-        boolean valid;
+        boolean performs = true, valid;
+        Long option;
 
-        try {
-            System.out.print("Digite uma opção: ");
-            option = scanner.nextLong();
-            valid = option == 1 || option == 2 ||option == 3 ||option == 4;
-
-            if(valid){
-                checkOptionsMenu((int)option);
-            } else {
-                System.out.println(ANSI_RED + "Opção inválida" + ANSI_RESET);
-                return;
+        while (performs) {
+            menu();
+            try {
+                option = scanner.nextLong();
+                valid = validateEntry(option);
+                if (valid) {
+                    performs = checkOptionsMenu(option);
+                }
+            } catch (Exception e) {
+                String buffer = scanner.nextLine();
+                System.out.println(red() + "Erro: Você deve digitar um número inteiro." + resetColor());
             }
-        } catch (java.util.InputMismatchException e) {
-            System.out.println(ANSI_RED + "Erro: Você deve digitar um número inteiro." + ANSI_RESET);
-            return;
+        }
+        scanner.close();
+    }
+    public static void menu() {
+        System.out.println(
+                ">>>> Menu <<<<\n" +
+                        "1 - Adicionar Contato\n" +
+                        "2 - Remover Contato\n" +
+                        "3 - Editar Contato\n" +
+                        "4 - Sair\n"
+        );
+        System.out.print("Digite uma opção: ");
+    }
+    public static boolean validateEntry(long option) {
+        option = (int) option;
+
+        if (option == 1 || option == 2 || option == 3 || option == 4) {
+            return true;
+        } else {
+            System.out.println(red() + "Opção inválida" + resetColor());
+            return false;
         }
     }
-
-
-    public static void checkOptionsMenu(int option) {
-        switch (option) {
+    public static boolean checkOptionsMenu(long option) {
+        switch ((int) option) {
             case 1:
                 System.out.println("adiciona");
                 break;
@@ -46,18 +53,17 @@ public class Main {
                 System.out.println("edita");
                 break;
             case 4:
-                System.exit(0);
-                //Scanner.close();
-                break;
+                return false;
         }
+        return true;
     }
-    public static void menu() {
-        System.out.println(
-                ">>>> Menu <<<<\n" +
-                        "1 - Adicionar Contato\n" +
-                        "2 - Remover Contato\n" +
-                        "3 - Editar Contato\n" +
-                        "4 - Sair\n"
-        );
+
+
+    //Color modification functions
+    public static String red(){
+        return "\u001B[31m";
+    }
+    public static String resetColor(){
+        return "\u001B[0m";
     }
 }
