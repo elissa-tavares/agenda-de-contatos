@@ -1,3 +1,5 @@
+package informacoes;
+
 public class Telephone {
     private Long id;
     private String ddd;
