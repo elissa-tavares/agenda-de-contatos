@@ -1,11 +1,11 @@
-package informacoes;
+package br.com.agenda.data.telephone;
 
 public class Telephone {
     private Long id;
     private String ddd;
     private Long number;
 
-    public Long getId() {
+        public Long getId() {
         return id;
     }
 
