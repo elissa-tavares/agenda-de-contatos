@@ -1,6 +1,6 @@
-package br.com.agenda.data.contact;
+package br.com.agenda.details.contact;
 
-import br.com.agenda.data.telephone.Telephone;
+import br.com.agenda.details.telephone.Telephone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,6 @@ public class Contact {
 
     public String getSurname() {
         return surname;
-    }
-
-    public List<Telephone> getTelephones() {
-        return telephones;
     }
 
     public void addTelephones(Telephone newTelephone) {

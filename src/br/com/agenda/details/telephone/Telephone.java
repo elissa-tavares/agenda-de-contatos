@@ -1,4 +1,4 @@
-package br.com.agenda.data.telephone;
+package br.com.agenda.details.telephone;
 
 public class Telephone {
     private Long id;

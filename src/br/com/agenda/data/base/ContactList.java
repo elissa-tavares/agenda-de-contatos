@@ -1,5 +1,6 @@
 package br.com.agenda.data.base;
-import br.com.agenda.data.contact.Contact;
+
+import br.com.agenda.details.contact.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
