@@ -7,28 +7,23 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        InsertAndModify action = new InsertAndModify();
         ContactList contactList = new ContactList();
         boolean performs = true, valid;
-        Menu menu = new Menu();
         Long option;
-        Long numId = 0L;
 
         while (performs) {
-            menu.displayMainMenu();
+            Menu.displayMainMenu();
             try {
                 option = scanner.nextLong();
-                valid = menu.validateEntry(option);
+                valid = Menu.validateEntry(option);
                 if (valid) {
-                    performs = menu.checkOptionsMenu(option, scanner, contactList, numId, action);
+                    performs = Menu.checkOptionsMenu(option, scanner, contactList);
                 }
             } catch (Exception e) {
                 scanner.nextLine();
-                System.out.println(menu.red() + "Erro: Você deve digitar um número inteiro." + menu.resetColor());
+                System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m");
             }
-            numId++; //tratar erro
         }
         scanner.close();
     }
-
 }

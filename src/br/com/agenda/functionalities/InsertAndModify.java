@@ -7,10 +7,10 @@ import br.com.agenda.details.telephone.Telephone;
 import java.util.Scanner;
 
 public class InsertAndModify {
-    public void addContact(Scanner scanner, ContactList contactList, Long numId) {
+    public void addContact(Scanner scanner, ContactList contactList) {
         Contact newContact = new Contact();
 
-        newContact.setId(numId);
+        newContact.setId(contactList);
 
         scanner.nextLine(); //clear buffer
         System.out.print("Nome: ");
@@ -23,7 +23,7 @@ public class InsertAndModify {
         contactList.addDataBase(newContact);
     }
 
-    public void addNumberTelephone(Scanner scanner, Contact newContact){
+    public void addNumberTelephone(Scanner scanner, Contact contact) {
         Telephone newTelephone = new Telephone();
 
         System.out.print("Digite o DDD: ");
@@ -32,6 +32,33 @@ public class InsertAndModify {
         System.out.print("Digite o numero: ");
         newTelephone.setNumber(scanner.nextLong());
 
-        newContact.addTelephones(newTelephone);
+        contact.addTelephones(newTelephone);
+    }
+
+    public void rmContact(ContactList contactList, Scanner scanner) {
+        contactList.displayList();
+
+        if (contactList.getSizeList() > 0) {
+            boolean removed;
+            System.out.print("Informe o ID do contato que deseja remover: ");
+            removed = contactList.rmDataBase(inputId(scanner));
+
+            while (!removed) {
+                System.out.print("Digite um ID válido: ");
+                removed = contactList.rmDataBase(inputId(scanner));
+            }
+        }
+    }
+
+    public Long inputId(Scanner scanner) {
+        try {
+            Long id = scanner.nextLong();
+            return id;
+        } catch (Exception e) {
+            scanner.nextLine();
+            System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m"); //red
+            System.out.print("Informe o ID do contato que deseja remover: ");
+            return inputId(scanner);
+        }
     }
 }
