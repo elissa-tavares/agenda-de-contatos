@@ -7,7 +7,15 @@ import java.util.Scanner;
 
 public class Menu {
     public void displayMenu() {
-        System.out.println(">>>> Menu <<<<\n" + "1 - Listar Contatos\n" + "2 - Adicionar Contato\n" + "3 - Remover Contato\n" + "4 - Editar Contato\n" + "5 - Sair\n");
+        String menu = """
+                   >>>> Menu <<<<     
+                 1 - Listar Contatos   
+                 2 - Adicionar Contato 
+                 3 - Remover Contato   
+                 4 - Editar Contato    
+                 5 - Sair              
+                """;
+        System.out.println(menu);
         System.out.print("Digite uma opção: ");
     }
 
@@ -15,7 +23,7 @@ public class Menu {
         InsertAndModify action = new InsertAndModify();
 
         if (contactList.isEmpty() && ((option != 2) && (option != 5))) { //if it is different from insert and exit
-            System.out.println("\u001B[33m" + "Agenda de contatos vazia" + "\u001B[0m\n");
+            System.out.println("\u001B[33m" + "Agenda de contatos vazia" + "\u001B[0m\n"); //yellow
             return true;
         }
         switch ((int) option) {
@@ -26,7 +34,10 @@ public class Menu {
                 contactList.addDataBase(action.inputContact(scanner, contactList));
                 break;
             case 3:
-                contactList.rmDataBase(action.idContactRemoved(scanner, contactList));
+                contactList.displayList();
+                System.out.print("Digite o ID do contato que deseja remover: ");
+                //resolver bug
+                contactList.rmDataBase(action.inputIdContact(scanner, contactList));
                 break;
             case 4:
                 action.editContact(scanner, contactList);

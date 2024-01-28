@@ -14,6 +14,10 @@ public class ContactList {
         return contactList.isEmpty();
     }
 
+    public boolean emptyTelephoneList(Long id) {
+        return contactList.get(Math.toIntExact(id)).getTelephones().isEmpty();
+    }
+
     public void displayList() {
         System.out.println("\u001B[34m" + "----------- AGENDA ----------" + "\u001B[0m");
         for (Contact contact : contactList) {
@@ -65,6 +69,28 @@ public class ContactList {
         }
     }
 
+    public void editTelephoneContact(Long idTelephone, Telephone edited, Long idContact) {
+        List<Telephone> telephoneList = contactList.get(Math.toIntExact(idContact)).getTelephones();
+
+        for (Telephone telephone : telephoneList) {
+            if (Objects.equals(idTelephone, telephone.getId())) {
+                telephone.setDdd(edited.getDdd());
+                telephone.setNumber(edited.getNumber());
+                System.out.println("\u001B[32m" + "Telefone Editado com sucesso\n" + "\u001B[0m"); //green
+            }
+        }
+    }
+
+    public void editNameContact(Contact edited, Long idContato) {
+        for (Contact contact : contactList) {
+            if (Objects.equals(idContato, contact.getId())) {
+                contact.setName(edited.getName());
+                contact.setSurname(edited.getSurname());
+                System.out.println("\u001B[32m" + "Nome editado com sucesso\n" + "\u001B[0m"); //green
+            }
+        }
+    }
+
     public boolean verificationIdContact(Long id) {
         for (Contact contact : contactList) {
             if (Objects.equals(id, contact.getId())) {
@@ -72,6 +98,10 @@ public class ContactList {
             }
         }
         return false;
+    }
+
+    public Long nextIdContact() {
+        return contactList.getLast().getId() + 1L;
     }
 
     public boolean verificationIdTelephone(Long id, long idContact) {
@@ -83,14 +113,6 @@ public class ContactList {
             }
         }
         return false;
-    }
-
-    public Long nextIdContact() {
-        return contactList.getLast().getId() + 1L;
-    }
-
-    public boolean emptyTelephoneList(Long id) {
-        return contactList.get(Math.toIntExact(id)).getTelephones().isEmpty();
     }
 
     public Long nextIdTelephone(Long id) {

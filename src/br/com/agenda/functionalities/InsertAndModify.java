@@ -13,13 +13,7 @@ public class InsertAndModify {
         Telephone newTelephone = new Telephone();
 
         newContact.setId(contactList);
-
-        scanner.nextLine(); //clear buffer
-        System.out.print("Nome: ");
-        newContact.setName(scanner.nextLine());
-
-        System.out.print("Sobrenome: ");
-        newContact.setSurname(scanner.nextLine());
+        newContact = inputFullName(scanner, newContact);
 
         newTelephone.setId(null, null);
         newTelephone = inputNumber(scanner, newTelephone);
@@ -28,11 +22,26 @@ public class InsertAndModify {
         return newContact;
     }
 
-    public Long idContactRemoved(Scanner scanner, ContactList contactList) {
-        contactList.displayList();
-        System.out.print("Digite o ID do contato que deseja remover: ");
-        //resolver bug
-        return inputIdContact(scanner, contactList);
+    public Contact inputFullName(Scanner scanner, Contact newContact) {
+        scanner.nextLine();
+        System.out.print("Nome: ");
+        newContact.setName(scanner.nextLine());
+
+        System.out.print("Sobrenome: ");
+        newContact.setSurname(scanner.nextLine());
+
+        return newContact;
+    }
+
+    public Telephone inputNumber(Scanner scanner, Telephone newTelephone) {
+
+        System.out.print("Digite o DDD: ");
+        newTelephone.setDdd(scanner.nextLine());
+
+        System.out.print("Digite o numero: ");
+        newTelephone.setNumber(scanner.nextLong());
+
+        return newTelephone;
     }
 
     public void editContact(Scanner scanner, ContactList contactList) {
@@ -42,6 +51,7 @@ public class InsertAndModify {
         Long option;
 
         while (performs) {
+            contactList.displayList();
             displayEditMenu();
             try {
                 option = scanner.nextLong();
@@ -57,17 +67,23 @@ public class InsertAndModify {
     }
 
     public void displayEditMenu() {
-        System.out.println(">>>>" + "\u001B[33m" + " Edição " + "\u001B[0m" + "<<<<\n" + "1 - Inserir Telefone\n" + "2 - Remover Telefone\n" + "3 - Editar Telefone\n" + "4 - Editar nome\n" + "5 - Sair\n");
+        String menu = """
+                \u001B[33m    >>>> Edição <<<<   \u001B[0m
+                 1 - Inserir Telefone  
+                 3 - Remover Telefone  
+                 3 - Editar Telefone   
+                 4 - Editar Nome       
+                 5 - Sair              
+                """;
+        System.out.println(menu);
         System.out.print("Digite uma opção: ");
     }
 
     public boolean checkOptionsEditMenu(long option, Scanner scanner, ContactList contactList) {
-        Contact contact = new Contact();
         if (option == 5) {
             return false;
         }
 
-        contactList.displayList();
         System.out.print("Digite o ID do contato que deseja editar: ");
         Long idContact = inputIdContact(scanner, contactList);
 
@@ -75,14 +91,19 @@ public class InsertAndModify {
             case 1:
                 contactList.addTelephoneContact(inputNewTelefone(scanner, contactList, idContact), idContact);
                 break;
-            case 2: //remover
-                contactList.rmTelephoneContact(idTelephoneRemoved(scanner, contactList, idContact), idContact);
+            case 2:
+                contactList.phoneDisplayList(idContact);
+                System.out.print("Digite o ID do telefone que deseja remover: ");
+                contactList.rmTelephoneContact(inputIdTelephone(scanner, contactList, idContact), idContact);
                 break;
-            case 3: //editar tele
-                System.out.println("edita tele");
+            case 3:
+                Telephone telephone = new Telephone();
+                System.out.print("Digite o ID do telefone que deseja editar: ");
+                contactList.editTelephoneContact(inputIdTelephone(scanner, contactList, idContact), inputNumber(scanner, telephone), idContact);
                 break;
-            case 4: //editar nome
-                System.out.println("edita nome");
+            case 4:
+                Contact contact = new Contact();
+                contactList.editNameContact(inputFullName(scanner, contact), idContact);
                 break;
         }
         return true;
@@ -92,24 +113,6 @@ public class InsertAndModify {
         Telephone newTelephone = new Telephone();
         newTelephone.setId(contactList, id);
         newTelephone = inputNumber(scanner, newTelephone);
-        return newTelephone;
-    }
-
-    public Long idTelephoneRemoved(Scanner scanner, ContactList contactList, Long idContact) {
-        contactList.phoneDisplayList(idContact);
-        System.out.print("Digite o ID do telefone que deseja remover: ");
-        //resolver bug
-
-        return inputIdTelephone(scanner, contactList, idContact);
-    }
-
-    public Telephone inputNumber(Scanner scanner, Telephone newTelephone) {
-        System.out.print("Digite o DDD: ");
-        newTelephone.setDdd(scanner.nextLine());
-
-        System.out.print("Digite o numero: ");
-        newTelephone.setNumber(scanner.nextLong());
-
         return newTelephone;
     }
 
