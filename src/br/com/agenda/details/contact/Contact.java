@@ -12,13 +12,16 @@ public class Contact {
     private String surname;
     private List<Telephone> telephones = new ArrayList<Telephone>();
 
+    public List<Telephone> getTelephones() {
+        return telephones;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(ContactList contactList) {
-        Long id = !contactList.isEmpty() ? contactList.lastId() : 0L;
-        this.id = id;
+        this.id = !contactList.isEmpty() ? contactList.nextIdContact() : 0L;
     }
 
     public void setName(String name) {
@@ -44,7 +47,7 @@ public class Contact {
     public String formatPhoneList() {
         String formated = "";
         for (Telephone element : this.telephones) {
-            formated += ("(" + element.getDdd() + ")" + " " + element.getNumber() + "\u001B[33m" + "|" + "\u001B[0m\n"); //add yellow
+            formated += (element.getId() + "\u001B[33m" + " | " + "\u001B[0m" + " (" + element.getDdd() + ")" + element.getNumber() + "\n"); //add yellow
         }
         return formated;
     }

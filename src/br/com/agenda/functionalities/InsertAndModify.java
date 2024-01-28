@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class InsertAndModify {
     public void addContact(Scanner scanner, ContactList contactList) {
         Contact newContact = new Contact();
+        Telephone newTelephone = new Telephone();
 
         newContact.setId(contactList);
 
@@ -20,7 +21,10 @@ public class InsertAndModify {
         System.out.print("Sobrenome: ");
         newContact.setSurname(scanner.nextLine());
 
-        newContact.addTelephones(inputTelephone(scanner));
+        newTelephone.setId(null, null);
+        newTelephone = inputNumber(scanner, newTelephone);
+
+        newContact.addTelephones(newTelephone);
         contactList.addDataBase(newContact);
     }
 
@@ -64,11 +68,11 @@ public class InsertAndModify {
 
         contactList.displayList();
         System.out.print("Digite o ID do contato que deseja editar: ");
+        Long id = inputId(scanner, contactList);
 
         switch ((int) option) {
             case 1:
-                addNewTelefone(scanner, contactList, inputId(scanner, contactList));
-                System.out.println("insere");
+                contactList.addTelephoneContact(inputNewTelefone(scanner, contactList, id), id);
                 break;
             case 2: //remover
                 System.out.println("remove");
@@ -83,13 +87,14 @@ public class InsertAndModify {
         return true;
     }
 
-    public void addNewTelefone(Scanner scanner, ContactList contactList, Long id) {
-        contactList.addTelephoneContact(inputTelephone(scanner), id);
+    public Telephone inputNewTelefone(Scanner scanner, ContactList contactList, Long id) {
+        Telephone newTelephone = new Telephone();
+        newTelephone.setId(contactList, id);
+        newTelephone = inputNumber(scanner, newTelephone);
+        return newTelephone;
     }
 
-    public Telephone inputTelephone(Scanner scanner) {
-        Telephone newTelephone = new Telephone();
-
+    public Telephone inputNumber(Scanner scanner, Telephone newTelephone) {
         System.out.print("Digite o DDD: ");
         newTelephone.setDdd(scanner.nextLine());
 

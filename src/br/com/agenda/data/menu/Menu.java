@@ -14,7 +14,7 @@ public class Menu {
     public boolean checkOptionsMenu(long option, Scanner scanner, ContactList contactList) {
         InsertAndModify action = new InsertAndModify();
 
-        if (contactList.isEmpty() && ((option != 2) && (option != 5))){ //if it is different from insert and exit
+        if (contactList.isEmpty() && ((option != 2) && (option != 5))) { //if it is different from insert and exit
             System.out.println("\u001B[33m" + "Agenda de contatos vazia" + "\u001B[0m\n");
             return true;
         }

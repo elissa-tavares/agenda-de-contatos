@@ -10,9 +10,18 @@ import java.util.Objects;
 public class ContactList {
     private List<Contact> contactList = new ArrayList<>();
 
-    public Long getSizeList() {
-        Long size = (long) contactList.size();
-        return size;
+    public boolean isEmpty() {
+        return contactList.isEmpty();
+    }
+
+    public void displayList() {
+        System.out.println("\u001B[34m" + "----------- AGENDA ----------" + "\u001B[0m");
+        for (Contact contact : contactList) {
+            System.out.print("\u001B[34m"); //blue
+            System.out.println(contact.getId() + "\u001B[34m" + " | " + " " + contact.getName() + " " + contact.getSurname() + "\u001B[0m");
+            System.out.print(contact.formatPhoneList());
+        }
+        System.out.println("\u001B[34m" + "-----------------------------" + "\u001B[0m");
     }
 
     public void addDataBase(Contact newContact) {
@@ -48,22 +57,17 @@ public class ContactList {
         return false;
     }
 
-    public Long lastId() {
+    public Long nextIdContact() {
         return contactList.getLast().getId() + 1L;
-        //return contactList.get(Math.toIntExact(contactList.size() - 1L)).getId();
     }
 
-    public void displayList() {
-        System.out.println("\u001B[34m" + "----------- AGENDA ----------" + "\u001B[0m");
-        for (Contact contact : contactList) {
-            System.out.print("\u001B[34m"); //blue
-            System.out.println("\u001B[34m" + contact.getId() + " - " + contact.getName() + " " + contact.getSurname() + "\u001B[0m");
-            System.out.print(contact.formatPhoneList());
-        }
-        System.out.println("\u001B[34m" + "-----------------------------" + "\u001B[0m");
+    public boolean emptyTelephoneList(Long id) {
+        System.out.println("entrou no emptyTelephoneList");
+        return contactList.get(Math.toIntExact(id)).getTelephones().isEmpty();
     }
 
-    public boolean isEmpty() {
-        return contactList.isEmpty();
+    public Long nextIdTelephone(Long id) {
+        System.out.println("entrou no nextIdTelephone");
+        return contactList.get(Math.toIntExact(id)).getTelephones().getLast().getId() + 1L;
     }
 }
