@@ -1,7 +1,7 @@
 package br.com.agenda.data.base;
 
-import br.com.agenda.details.contact.Contact;
-import br.com.agenda.details.telephone.Telephone;
+import br.com.agenda.details.Contact;
+import br.com.agenda.details.Telephone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,27 @@ public class ContactList {
     }
 
     public void phoneDisplayList(Long idContact) {
-        contactList.get(Math.toIntExact(idContact)).formatPhoneList();
+        System.out.println(
+                contactList.get(Math.toIntExact(idContact)).getId() + "\u001B[34m" + " | " + " " +
+                        contactList.get(Math.toIntExact(idContact)).getName() + " " + contactList.get(Math.toIntExact(idContact)).getSurname() + "\u001B[0m"
+        );
+        System.out.print(contactList.get(Math.toIntExact(idContact)).formatPhoneList());
+    }
+
+    public boolean validNumber(String ddd, long number) {
+        if (ddd.isEmpty()) {
+            System.out.println("\u001B[31m" + "DDD inválido" + "\u001B[0m");
+            return false;
+        }
+        for (Contact contact : contactList) {
+            for (Telephone telephone : contact.getTelephones()) {
+                if (telephone.getDdd().equals(ddd) && telephone.getNumber().equals(number)) {
+                    System.out.println("\u001B[31m" + "Contato já existente" + "\u001B[0m");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void addDataBase(Contact newContact) {
@@ -38,16 +58,17 @@ public class ContactList {
     }
 
     public void rmDataBase(Long id) {
-        //resolver bug
         for (Contact contact : contactList) {
             if (Objects.equals(id, contact.getId())) {
                 contactList.remove(contact);
                 System.out.println("\u001B[32m" + "Contato removido com sucesso\n" + "\u001B[0m"); //green
+                break;
             }
         }
     }
 
-    public void addTelephoneContact(Telephone telephone, Long id) {
+    public void addTelephoneContact(Telephone telephone, Long id) { //nao ta entrando aqui
+        System.out.println("entrou no addTelephone");
         for (Contact contact : contactList) {
             if (Objects.equals(id, contact.getId())) {
                 contact.addTelephones(telephone);
@@ -58,13 +79,13 @@ public class ContactList {
     }
 
     public void rmTelephoneContact(Long idTelephone, Long idContact) {
-        //resolver bug
         List<Telephone> telephoneList = contactList.get(Math.toIntExact(idContact)).getTelephones();
 
         for (Telephone telephone : telephoneList) {
             if (Objects.equals(idTelephone, telephone.getId())) {
                 telephoneList.remove(telephone);
                 System.out.println("\u001B[32m" + "Telefone removido com sucesso\n" + "\u001B[0m"); //green
+                break;
             }
         }
     }
@@ -77,6 +98,7 @@ public class ContactList {
                 telephone.setDdd(edited.getDdd());
                 telephone.setNumber(edited.getNumber());
                 System.out.println("\u001B[32m" + "Telefone Editado com sucesso\n" + "\u001B[0m"); //green
+                break;
             }
         }
     }
@@ -87,6 +109,7 @@ public class ContactList {
                 contact.setName(edited.getName());
                 contact.setSurname(edited.getSurname());
                 System.out.println("\u001B[32m" + "Nome editado com sucesso\n" + "\u001B[0m"); //green
+                break;
             }
         }
     }

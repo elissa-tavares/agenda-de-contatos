@@ -1,4 +1,4 @@
-package br.com.agenda.details.telephone;
+package br.com.agenda.details;
 
 import br.com.agenda.data.base.ContactList;
 
@@ -13,11 +13,8 @@ public class Telephone {
     }
 
     public void setId(ContactList contactList, Long contactId) {
-        if (!(contactList == null)) {
-            this.id = !contactList.emptyTelephoneList(contactId) ? contactList.nextIdTelephone(contactId) : 0L;
-        } else {
-            this.id = 0L;
-        }
+
+        this.id = contactId == null ? 0L : contactList.nextIdTelephone(contactId);
     }
 
     public String getDdd() {
@@ -25,6 +22,8 @@ public class Telephone {
     }
 
     public void setDdd(String ddd) {
+        ddd = ddd.replaceAll(" ", "");
+        ddd = ddd.replaceAll("\n", "");
         this.ddd = ddd;
     }
 

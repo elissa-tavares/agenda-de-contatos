@@ -2,28 +2,22 @@ package br.com.agenda.functionalities;
 
 import br.com.agenda.data.base.ContactList;
 import br.com.agenda.data.menu.Menu;
-import br.com.agenda.details.contact.Contact;
-import br.com.agenda.details.telephone.Telephone;
+import br.com.agenda.details.Contact;
+import br.com.agenda.details.Telephone;
 
 import java.util.Scanner;
 
 public class InsertAndModify {
     public Contact inputContact(Scanner scanner, ContactList contactList) {
         Contact newContact = new Contact();
-        Telephone newTelephone = new Telephone();
-
         newContact.setId(contactList);
         newContact = inputFullName(scanner, newContact);
 
-        newTelephone.setId(null, null);
-        newTelephone = inputNumber(scanner, newTelephone);
-
-        newContact.addTelephones(newTelephone);
+        newContact.addTelephones(inputNewTelefone(scanner, contactList, null));
         return newContact;
     }
 
     public Contact inputFullName(Scanner scanner, Contact newContact) {
-        scanner.nextLine();
         System.out.print("Nome: ");
         newContact.setName(scanner.nextLine());
 
@@ -33,15 +27,39 @@ public class InsertAndModify {
         return newContact;
     }
 
-    public Telephone inputNumber(Scanner scanner, Telephone newTelephone) {
+    public Telephone inputNewTelefone(Scanner scanner, ContactList contactList, Long id) {
+        Telephone newTelephone = new Telephone();
+        newTelephone = inputNumber(scanner, newTelephone, contactList);
+        newTelephone.setId(contactList, id);
+        return newTelephone;
+    }
 
+    public Telephone inputNumber(Scanner scanner, Telephone newTelephone, ContactList contactList) {
+        boolean validNumber;
         System.out.print("Digite o DDD: ");
         newTelephone.setDdd(scanner.nextLine());
 
         System.out.print("Digite o numero: ");
         newTelephone.setNumber(scanner.nextLong());
+        validNumber = contactList.validNumber(newTelephone.getDdd(), newTelephone.getNumber());
 
+        if (!validNumber) {
+            return inputNumber(scanner, newTelephone, contactList);
+        }
         return newTelephone;
+    }
+
+    public void displayEditMenu() {
+        String menu = """
+                \u001B[33m    >>>> Edição <<<<   \u001B[0m
+                 1 - Inserir Telefone  
+                 2 - Remover Telefone  
+                 3 - Editar Telefone   
+                 4 - Editar Nome       
+                 5 - \u001B[33mVoltar para o menu anterior\u001B[0m        
+                """;
+        System.out.println(menu);
+        System.out.print("Digite uma opção: ");
     }
 
     public void editContact(Scanner scanner, ContactList contactList) {
@@ -66,40 +84,33 @@ public class InsertAndModify {
         }
     }
 
-    public void displayEditMenu() {
-        String menu = """
-                \u001B[33m    >>>> Edição <<<<   \u001B[0m
-                 1 - Inserir Telefone  
-                 3 - Remover Telefone  
-                 3 - Editar Telefone   
-                 4 - Editar Nome       
-                 5 - Sair              
-                """;
-        System.out.println(menu);
-        System.out.print("Digite uma opção: ");
-    }
-
     public boolean checkOptionsEditMenu(long option, Scanner scanner, ContactList contactList) {
         if (option == 5) {
             return false;
         }
 
-        System.out.print("Digite o ID do contato que deseja editar: ");
+        System.out.print("Digite o ID do" + "[33m contato [0m" + "que deseja editar: "); //yellow
         Long idContact = inputIdContact(scanner, contactList);
 
         switch ((int) option) {
-            case 1:
+            case 1: //bug aqui
+                //System.out.println("entrou no case");
                 contactList.addTelephoneContact(inputNewTelefone(scanner, contactList, idContact), idContact);
                 break;
             case 2:
-                contactList.phoneDisplayList(idContact);
-                System.out.print("Digite o ID do telefone que deseja remover: ");
-                contactList.rmTelephoneContact(inputIdTelephone(scanner, contactList, idContact), idContact);
+                if (checkContactList(contactList, idContact)) {
+                    contactList.phoneDisplayList(idContact);
+                    System.out.print("Digite o ID do" + "[33m telefone [0m" + "que deseja remover: "); //yellow
+                    contactList.rmTelephoneContact(inputIdTelephone(scanner, contactList, idContact), idContact);
+                }
                 break;
             case 3:
                 Telephone telephone = new Telephone();
-                System.out.print("Digite o ID do telefone que deseja editar: ");
-                contactList.editTelephoneContact(inputIdTelephone(scanner, contactList, idContact), inputNumber(scanner, telephone), idContact);
+                if (checkContactList(contactList, idContact)) {
+                    contactList.phoneDisplayList(idContact);
+                    System.out.print("Digite o ID do" + "[33m telefone [0m" + "que deseja editar: "); //yellow
+                    contactList.editTelephoneContact(inputIdTelephone(scanner, contactList, idContact), inputNumber(scanner, telephone, contactList), idContact);
+                }
                 break;
             case 4:
                 Contact contact = new Contact();
@@ -109,11 +120,12 @@ public class InsertAndModify {
         return true;
     }
 
-    public Telephone inputNewTelefone(Scanner scanner, ContactList contactList, Long id) {
-        Telephone newTelephone = new Telephone();
-        newTelephone.setId(contactList, id);
-        newTelephone = inputNumber(scanner, newTelephone);
-        return newTelephone;
+    public boolean checkContactList(ContactList contactList, Long idContato) {
+        if (contactList.emptyTelephoneList(idContato)) {
+            System.out.println("\u001B[31m" + "Não há nenhum telefone registrado nesse contato" + "\u001B[0m");
+            return false;
+        }
+        return true;
     }
 
     public Long inputIdContact(Scanner scanner, ContactList contactList) {

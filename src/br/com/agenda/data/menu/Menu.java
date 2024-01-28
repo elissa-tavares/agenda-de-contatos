@@ -13,7 +13,7 @@ public class Menu {
                  2 - Adicionar Contato 
                  3 - Remover Contato   
                  4 - Editar Contato    
-                 5 - Sair              
+                 5 - \u001B[31mSair\u001B[0m              
                 """;
         System.out.println(menu);
         System.out.print("Digite uma opção: ");
@@ -36,7 +36,6 @@ public class Menu {
             case 3:
                 contactList.displayList();
                 System.out.print("Digite o ID do contato que deseja remover: ");
-                //resolver bug
                 contactList.rmDataBase(action.inputIdContact(scanner, contactList));
                 break;
             case 4:

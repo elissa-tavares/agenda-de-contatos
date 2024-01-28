@@ -15,13 +15,13 @@ public class Main {
             menu.displayMenu();
             try {
                 option = scanner.nextLong();
+                scanner.nextLine();
                 valid = menu.validateEntry(option);
                 if (valid) {
                     performs = menu.checkOptionsMenu(option, scanner, contactList);
                 }
             } catch (Exception e) {
                 scanner.nextLine();
-                System.out.println("entrou aqui");
                 System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m");
             }
         }

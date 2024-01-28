@@ -1,7 +1,6 @@
-package br.com.agenda.details.contact;
+package br.com.agenda.details;
 
 import br.com.agenda.data.base.ContactList;
-import br.com.agenda.details.telephone.Telephone;
 
 import java.util.ArrayList;
 import java.util.List;
