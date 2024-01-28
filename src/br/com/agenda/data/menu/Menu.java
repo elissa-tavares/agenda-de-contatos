@@ -6,13 +6,18 @@ import br.com.agenda.functionalities.InsertAndModify;
 import java.util.Scanner;
 
 public class Menu {
-    public static void displayMainMenu() {
+    public void displayMenu() {
         System.out.println(">>>> Menu <<<<\n" + "1 - Listar Contatos\n" + "2 - Adicionar Contato\n" + "3 - Remover Contato\n" + "4 - Editar Contato\n" + "5 - Sair\n");
         System.out.print("Digite uma opção: ");
     }
 
-    public static boolean checkOptionsMenu(long option, Scanner scanner, ContactList contactList) {
+    public boolean checkOptionsMenu(long option, Scanner scanner, ContactList contactList) {
         InsertAndModify action = new InsertAndModify();
+
+        if (contactList.isEmpty() && ((option != 2) && (option != 5))){ //if it is different from insert and exit
+            System.out.println("\u001B[33m" + "Agenda de contatos vazia" + "\u001B[0m\n");
+            return true;
+        }
         switch ((int) option) {
             case 1:
                 contactList.displayList();
@@ -21,10 +26,10 @@ public class Menu {
                 action.addContact(scanner, contactList);
                 break;
             case 3:
-                action.rmContact(contactList, scanner);
+                action.rmContact(scanner, contactList);
                 break;
             case 4:
-                System.out.println("edita");
+                action.editContact(scanner, contactList);
                 break;
             case 5:
                 return false;
@@ -32,7 +37,7 @@ public class Menu {
         return true;
     }
 
-    public static boolean validateEntry(long option) {
+    public boolean validateEntry(long option) {
         option = (int) option;
 
         if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
@@ -42,5 +47,4 @@ public class Menu {
             return false;
         }
     }
-    
 }

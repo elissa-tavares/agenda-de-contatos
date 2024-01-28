@@ -17,7 +17,7 @@ public class Contact {
     }
 
     public void setId(ContactList contactList) {
-        Long id = contactList.lastId() + 1L;
+        Long id = !contactList.isEmpty() ? contactList.lastId() : 0L;
         this.id = id;
     }
 

@@ -1,6 +1,7 @@
 package br.com.agenda.functionalities;
 
 import br.com.agenda.data.base.ContactList;
+import br.com.agenda.data.menu.Menu;
 import br.com.agenda.details.contact.Contact;
 import br.com.agenda.details.telephone.Telephone;
 
@@ -19,11 +20,74 @@ public class InsertAndModify {
         System.out.print("Sobrenome: ");
         newContact.setSurname(scanner.nextLine());
 
-        addNumberTelephone(scanner, newContact);
+        newContact.addTelephones(inputTelephone(scanner));
         contactList.addDataBase(newContact);
     }
 
-    public void addNumberTelephone(Scanner scanner, Contact contact) {
+    public void rmContact(Scanner scanner, ContactList contactList) {
+        contactList.displayList();
+        System.out.print("Digite o ID do contato que deseja remover: ");
+        contactList.rmDataBase(inputId(scanner, contactList));
+        scanner.nextLine(); //erro aqui
+    }
+
+    public void editContact(Scanner scanner, ContactList contactList) {
+        Menu menu = new Menu();
+
+        boolean performs = true, valid;
+        Long option;
+
+        while (performs) {
+            displayEditMenu();
+            try {
+                option = scanner.nextLong();
+                valid = menu.validateEntry(option);
+                if (valid) {
+                    performs = checkOptionsEditMenu(option, scanner, contactList);
+                }
+            } catch (Exception e) {
+                scanner.nextLine();
+                System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m");
+            }
+        }
+    }
+
+    public void displayEditMenu() {
+        System.out.println(">>>>" + "\u001B[33m" + " Edição " + "\u001B[0m" + "<<<<\n" + "1 - Inserir Telefone\n" + "2 - Remover Telefone\n" + "3 - Editar Telefone\n" + "4 - Editar nome\n" + "5 - Sair\n");
+        System.out.print("Digite uma opção: ");
+    }
+
+    public boolean checkOptionsEditMenu(long option, Scanner scanner, ContactList contactList) {
+        if (option == 5) {
+            return false;
+        }
+
+        contactList.displayList();
+        System.out.print("Digite o ID do contato que deseja editar: ");
+
+        switch ((int) option) {
+            case 1:
+                addNewTelefone(scanner, contactList, inputId(scanner, contactList));
+                System.out.println("insere");
+                break;
+            case 2: //remover
+                System.out.println("remove");
+                break;
+            case 3: //editar tele
+                System.out.println("edita tele");
+                break;
+            case 4: //editar nome
+                System.out.println("edita nome");
+                break;
+        }
+        return true;
+    }
+
+    public void addNewTelefone(Scanner scanner, ContactList contactList, Long id) {
+        contactList.addTelephoneContact(inputTelephone(scanner), id);
+    }
+
+    public Telephone inputTelephone(Scanner scanner) {
         Telephone newTelephone = new Telephone();
 
         System.out.print("Digite o DDD: ");
@@ -32,33 +96,27 @@ public class InsertAndModify {
         System.out.print("Digite o numero: ");
         newTelephone.setNumber(scanner.nextLong());
 
-        contact.addTelephones(newTelephone);
+        return newTelephone;
     }
 
-    public void rmContact(ContactList contactList, Scanner scanner) {
-        contactList.displayList();
-
-        if (contactList.getSizeList() > 0) {
-            boolean removed;
-            System.out.print("Informe o ID do contato que deseja remover: ");
-            removed = contactList.rmDataBase(inputId(scanner));
-
-            while (!removed) {
-                System.out.print("Digite um ID válido: ");
-                removed = contactList.rmDataBase(inputId(scanner));
-            }
-        }
-    }
-
-    public Long inputId(Scanner scanner) {
+    public Long inputId(Scanner scanner, ContactList contactList) {
+        boolean validatedId;
         try {
             Long id = scanner.nextLong();
-            return id;
+            scanner.nextLine();
+            validatedId = contactList.verificationId(id);
+            if (validatedId) {
+                return id;
+            } else {
+                System.out.print("\u001B[31m" + "ID inexistente. " + "\u001B[0m"); //red
+                System.out.print("Digite um ID válido: ");
+                return inputId(scanner, contactList);
+            }
         } catch (Exception e) {
             scanner.nextLine();
-            System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m"); //red
-            System.out.print("Informe o ID do contato que deseja remover: ");
-            return inputId(scanner);
+            System.out.print("\u001B[31m" + "Erro: Você deve digitar um número inteiro. " + "\u001B[0m"); //red
+            System.out.print("Digite um ID válido: ");
+            return inputId(scanner, contactList);
         }
     }
 }
