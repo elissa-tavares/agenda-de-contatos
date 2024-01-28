@@ -1,7 +1,6 @@
 package br.com.agenda.details.telephone;
 
 import br.com.agenda.data.base.ContactList;
-import br.com.agenda.details.contact.Contact;
 
 public class Telephone {
     private Long id;
@@ -14,7 +13,7 @@ public class Telephone {
     }
 
     public void setId(ContactList contactList, Long contactId) {
-        if (contactList != null) {
+        if (!(contactList == null)) {
             this.id = !contactList.emptyTelephoneList(contactId) ? contactList.nextIdTelephone(contactId) : 0L;
         } else {
             this.id = 0L;

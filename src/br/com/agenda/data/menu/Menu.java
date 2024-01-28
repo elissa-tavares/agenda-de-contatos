@@ -23,10 +23,10 @@ public class Menu {
                 contactList.displayList();
                 break;
             case 2:
-                action.addContact(scanner, contactList);
+                contactList.addDataBase(action.inputContact(scanner, contactList));
                 break;
             case 3:
-                action.rmContact(scanner, contactList);
+                contactList.rmDataBase(action.idContactRemoved(scanner, contactList));
                 break;
             case 4:
                 action.editContact(scanner, contactList);
