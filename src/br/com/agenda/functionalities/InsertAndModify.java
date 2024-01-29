@@ -9,45 +9,45 @@ import java.util.Scanner;
 
 public class InsertAndModify {
     public Contact inputContact(Scanner scanner, ContactList contactList) {
-        Contact newContact = new Contact();
+        Contact newContact = inputFullName(scanner);
         newContact.setId(contactList);
-        newContact = inputFullName(scanner, newContact);
 
         newContact.addTelephones(inputNewTelefone(scanner, contactList, null));
         return newContact;
     }
 
-    public Contact inputFullName(Scanner scanner, Contact newContact) {
+    public Contact inputFullName(Scanner scanner) {
+        Contact contact = new Contact();
         System.out.print("Nome: ");
-        newContact.setName(scanner.nextLine());
+        contact.setName(scanner.nextLine());
 
         System.out.print("Sobrenome: ");
-        newContact.setSurname(scanner.nextLine());
+        contact.setSurname(scanner.nextLine());
 
-        return newContact;
+        return contact;
     }
 
     public Telephone inputNewTelefone(Scanner scanner, ContactList contactList, Long id) {
-        Telephone newTelephone = new Telephone();
-        newTelephone = inputNumber(scanner, newTelephone, contactList);
+        Telephone newTelephone = inputNumber(scanner, contactList);
         newTelephone.setId(contactList, id);
         return newTelephone;
     }
 
-    public Telephone inputNumber(Scanner scanner, Telephone newTelephone, ContactList contactList) {
+    public Telephone inputNumber(Scanner scanner, ContactList contactList) {
+        Telephone telephone = new Telephone();
         boolean validNumber;
         System.out.print("Digite o DDD: ");
-        newTelephone.setDdd(scanner.nextLine());
+        telephone.setDdd(scanner.nextLine());
 
         System.out.print("Digite o numero: ");
-        newTelephone.setNumber(scanner.nextLong());
-        validNumber = contactList.checkRepeatedNumbers(newTelephone.getDdd(), newTelephone.getNumber());
+        telephone.setNumber(scanner.nextLong());
+        validNumber = contactList.checkRepeatedNumbers(telephone.getDdd(), telephone.getNumber());
 
         if (!validNumber) {
             scanner.nextLine();
-            return inputNumber(scanner, newTelephone, contactList);
+            return inputNumber(scanner, contactList);
         }
-        return newTelephone;
+        return telephone;
     }
 
     public void displayEditMenu() {
@@ -81,7 +81,6 @@ public class InsertAndModify {
                 }
             } catch (Exception e) {
                 scanner.nextLine();
-                System.out.println("entoru aqui");
                 System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m");
             }
         }
@@ -107,16 +106,14 @@ public class InsertAndModify {
                 }
                 break;
             case 3:
-                Telephone telephone = new Telephone();
                 if (checkContactList(contactList, idContact)) {
                     contactList.phoneDisplayList(idContact);
                     System.out.print("Digite o ID do" + "[33m telefone [0m" + "que deseja editar: "); //yellow
-                    contactList.editTelephoneContact(inputIdTelephone(scanner, contactList, idContact), inputNumber(scanner, telephone, contactList), idContact);
+                    contactList.editTelephoneContact(inputIdTelephone(scanner, contactList, idContact), inputNumber(scanner, contactList), idContact);
                 }
                 break;
             case 4:
-                Contact contact = new Contact();
-                contactList.editNameContact(inputFullName(scanner, contact), idContact);
+                contactList.editNameContact(inputFullName(scanner), idContact);
                 break;
         }
         return true;

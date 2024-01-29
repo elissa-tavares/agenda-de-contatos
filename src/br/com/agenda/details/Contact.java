@@ -95,10 +95,10 @@ public class Contact {
     }
 
     public String formatPhoneList() {
-        StringBuilder formated = new StringBuilder();
+        StringBuilder Formatted = new StringBuilder();
         for (Telephone element : this.telephones) {
-            formated.append(element.getId()).append("\u001B[33m").append(" | ").append("\u001B[0m").append(" (").append(element.getDdd()).append(")").append(element.getNumber()).append("\n"); //add yellow
+            Formatted.append(element.getId()).append("\u001B[33m").append(" | ").append("\u001B[0m").append(" (").append(element.getDdd()).append(")").append(element.getNumber()).append("\n"); //add yellow
         }
-        return formated.toString();
+        return Formatted.toString();
     }
 }
