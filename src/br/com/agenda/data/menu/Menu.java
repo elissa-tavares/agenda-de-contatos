@@ -8,25 +8,25 @@ import java.util.Scanner;
 public class Menu {
     public void displayMenu() {
         String menu = """
-                   >>>> Menu <<<<     
-                 1 - Listar Contatos   
-                 2 - Adicionar Contato 
-                 3 - Remover Contato   
-                 4 - Editar Contato    
-                 5 - \u001B[31mSair\u001B[0m              
+                   >>>> Menu <<<<    \s
+                 1 - Listar Contatos  \s
+                 2 - Adicionar Contato\s
+                 3 - Remover Contato  \s
+                 4 - Editar Contato   \s
+                 5 - \u001B[31mSair\u001B[0m             \s
                 """;
         System.out.println(menu);
         System.out.print("Digite uma opção: ");
     }
 
-    public boolean checkOptionsMenu(long option, Scanner scanner, ContactList contactList) {
+    public boolean checkOptionsMenu(int option, Scanner scanner, ContactList contactList) {
         InsertAndModify action = new InsertAndModify();
 
         if (contactList.isEmpty() && ((option != 2) && (option != 5))) { //if it is different from insert and exit
             System.out.println("\u001B[33m" + "Agenda de contatos vazia" + "\u001B[0m\n"); //yellow
             return true;
         }
-        switch ((int) option) {
+        switch (option) {
             case 1:
                 contactList.displayList();
                 break;
@@ -47,9 +47,7 @@ public class Menu {
         return true;
     }
 
-    public boolean validateEntry(long option) {
-        option = (int) option;
-
+    public boolean validateEntry(int option) {
         if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
             return true;
         } else {

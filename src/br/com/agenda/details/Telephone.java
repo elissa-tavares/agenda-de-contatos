@@ -13,8 +13,7 @@ public class Telephone {
     }
 
     public void setId(ContactList contactList, Long contactId) {
-
-        this.id = contactId == null ? 0L : contactList.nextIdTelephone(contactId);
+        this.id = contactId == null || contactList.emptyTelephoneList(contactId) ? 0L : contactList.nextIdTelephone(contactId);
     }
 
     public String getDdd() {

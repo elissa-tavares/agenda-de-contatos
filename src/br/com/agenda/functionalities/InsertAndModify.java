@@ -41,9 +41,10 @@ public class InsertAndModify {
 
         System.out.print("Digite o numero: ");
         newTelephone.setNumber(scanner.nextLong());
-        validNumber = contactList.validNumber(newTelephone.getDdd(), newTelephone.getNumber());
+        validNumber = contactList.checkRepeatedNumbers(newTelephone.getDdd(), newTelephone.getNumber());
 
         if (!validNumber) {
+            scanner.nextLine();
             return inputNumber(scanner, newTelephone, contactList);
         }
         return newTelephone;
@@ -52,11 +53,11 @@ public class InsertAndModify {
     public void displayEditMenu() {
         String menu = """
                 \u001B[33m    >>>> Edição <<<<   \u001B[0m
-                 1 - Inserir Telefone  
-                 2 - Remover Telefone  
-                 3 - Editar Telefone   
-                 4 - Editar Nome       
-                 5 - \u001B[33mVoltar para o menu anterior\u001B[0m        
+                 1 - Inserir Telefone \s
+                 2 - Remover Telefone \s
+                 3 - Editar Telefone  \s
+                 4 - Editar Nome      \s
+                 5 - \u001B[33mVoltar para o menu anterior\u001B[0m       \s
                 """;
         System.out.println(menu);
         System.out.print("Digite uma opção: ");
@@ -66,25 +67,27 @@ public class InsertAndModify {
         Menu menu = new Menu();
 
         boolean performs = true, valid;
-        Long option;
+        int option;
 
         while (performs) {
             contactList.displayList();
             displayEditMenu();
             try {
-                option = scanner.nextLong();
+                option = scanner.nextInt();
+                scanner.nextLine();
                 valid = menu.validateEntry(option);
                 if (valid) {
                     performs = checkOptionsEditMenu(option, scanner, contactList);
                 }
             } catch (Exception e) {
                 scanner.nextLine();
+                System.out.println("entoru aqui");
                 System.out.println("\u001B[31m" + "Erro: Você deve digitar um número inteiro." + "\u001B[0m");
             }
         }
     }
 
-    public boolean checkOptionsEditMenu(long option, Scanner scanner, ContactList contactList) {
+    public boolean checkOptionsEditMenu(int option, Scanner scanner, ContactList contactList) {
         if (option == 5) {
             return false;
         }
@@ -92,9 +95,8 @@ public class InsertAndModify {
         System.out.print("Digite o ID do" + "[33m contato [0m" + "que deseja editar: "); //yellow
         Long idContact = inputIdContact(scanner, contactList);
 
-        switch ((int) option) {
-            case 1: //bug aqui
-                //System.out.println("entrou no case");
+        switch (option) {
+            case 1:
                 contactList.addTelephoneContact(inputNewTelefone(scanner, contactList, idContact), idContact);
                 break;
             case 2:

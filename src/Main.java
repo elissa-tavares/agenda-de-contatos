@@ -9,12 +9,12 @@ public class Main {
         ContactList contactList = new ContactList();
         Menu menu = new Menu();
         boolean performs = true, valid;
-        Long option;
+        int option;
 
         while (performs) {
             menu.displayMenu();
             try {
-                option = scanner.nextLong();
+                option = scanner.nextInt();
                 scanner.nextLine();
                 valid = menu.validateEntry(option);
                 if (valid) {
