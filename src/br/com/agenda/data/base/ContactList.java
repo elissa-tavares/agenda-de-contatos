@@ -68,10 +68,10 @@ public class ContactList {
     }
 
     public void addTelephoneContact(Telephone telephone, Long id) { //nao ta entrando aqui
-        System.out.println("entrou no addTelephone");
         for (Contact contact : contactList) {
             if (Objects.equals(id, contact.getId())) {
-                contact.addTelephones(telephone);
+                List<Telephone> telephoneList = contactList.get(Math.toIntExact(idContact)).getTelephones();
+                telephoneList.add(telephone);
                 System.out.println("\u001B[32m" + "Telefone adicionado com sucesso\n" + "\u001B[0m"); //green
                 break;
             }
@@ -80,7 +80,6 @@ public class ContactList {
 
     public void rmTelephoneContact(Long idTelephone, Long idContact) {
         List<Telephone> telephoneList = contactList.get(Math.toIntExact(idContact)).getTelephones();
-
         for (Telephone telephone : telephoneList) {
             if (Objects.equals(idTelephone, telephone.getId())) {
                 telephoneList.remove(telephone);
