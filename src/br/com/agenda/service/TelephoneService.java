@@ -13,12 +13,11 @@ public class TelephoneService {
         return contactRepository.checkRepeatedNumbers(ddd, number);
     }
 
-    public boolean validatePhoneId(Long idTelephone, Long idContact) {
-        return contactRepository.verificationIdTelephone(idTelephone, idContact);
+    public boolean validatePhoneId(Long phoneId, Long contactId) {
+        return contactRepository.phoneIdVerification(phoneId, contactId);
     }
 
-    public Long setId(Long idContact) {
-        return contactRepository.emptyPhoneBook(idContact) ? 0L : contactRepository.nextPhoneId(idContact);
+    public Long setId(Long contactId) {
+        return contactRepository.emptyPhoneBook(contactId) ? 0L : contactRepository.nextPhoneId(contactId);
     }
-
 }

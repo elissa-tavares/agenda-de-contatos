@@ -16,24 +16,19 @@ public class DataBase {
         contactList = new ArrayList<>();
     }
 
-
     public void create(Contact contact) {
         contactList.add(contact);
     }
 
-    public void createTelephone(Long idContact, Telephone telephone) {
-        Contact contact = read(idContact);
-        contact.addTelephones(telephone);
-        System.out.println(Color.GREEN + "Telefone adicionado com sucesso\n" + Color.RESET);
+    public void createPhone(Long contactId, Telephone Phone) {
+        Contact contact = read(contactId);
+        contact.addPhone(Phone);
     }
 
     public Contact read(Long id) {
-        for (Contact contact : contactList) {
-            if (Objects.equals(id, contact.getId())) {
-                return contact;
-            }
-        }
-        return null;
+        return contactList.stream()
+                .filter(contact -> Objects.equals(id, contact.getId()))
+                .findFirst().get();
     }
 
     public void update() {
@@ -42,19 +37,15 @@ public class DataBase {
 
     public void delete(Long id) {
         Contact contact = read(id);
-        System.out.println(Color.GREEN + "Contato removido com sucesso\n" + Color.RESET);
         contactList.remove(contact);
     }
 
-    public void deleteTelephone(Long idContact, Long idTelephone) {
-        Contact contact = read(idContact);
-        for (Telephone telephone : contact.getTelephones()) {
-            if (Objects.equals(idTelephone, telephone.getId())) {
-                contact.getTelephones().remove(telephone);
-                System.out.println(Color.GREEN + "Telefone removido com sucesso\n" + Color.RESET);
-                break;
-            }
-        }
+    public void deletePhone(Long contactId, Long phoneId) {
+        Contact contact = read(contactId);
+        Telephone telephone = contact.getPhones().stream()
+                .filter(phone -> Objects.equals(phoneId, phone.getId()))
+                .findFirst().get();
+        contact.getPhones().remove(telephone);
     }
 
     public boolean isEmpty() {
@@ -63,65 +54,52 @@ public class DataBase {
 
     public boolean emptyPhoneBook(Long id) {
         Contact contact = read(id);
-        return contact.getTelephones().isEmpty();
+        return contact.getPhones().isEmpty();
     }
 
     public String displayList() {
         StringBuilder Formatted = new StringBuilder();
-        Formatted.append(Color.BLUE + "----------- AGENDA ----------\n" + Color.RESET);
+        Formatted.append(Color.BLUE).append("----------- AGENDA ----------\n").append(Color.RESET);
         for (Contact contact : contactList) {
             Formatted.append(Color.BLUE).append(contact.getId()).append(" | ").append(" ").append(contact.getName()).append(" ").append(contact.getSurname()).append("\n").append(Color.RESET);
             Formatted.append(phoneList(contact));
         }
-        Formatted.append(Color.BLUE + "-----------------------------\n" + Color.RESET);
+        Formatted.append(Color.BLUE).append("-----------------------------\n").append(Color.RESET);
         return Formatted.toString();
     }
 
     public String phoneList(Contact contact) {
         StringBuilder Formatted = new StringBuilder();
-        for (Telephone element : contact.getTelephones()) {
+        for (Telephone element : contact.getPhones()) {
             Formatted.append(element.getId()).append(" | ").append(" (").append(element.getDdd()).append(")").append(element.getNumber()).append("\n"); //add yellow
         }
         return Formatted.toString();
     }
 
     public boolean validNumber(String ddd, long number) {
-        for (Contact contact : contactList) {
-            for (Telephone telephone : contact.getTelephones()) {
-                if (telephone.getDdd().equals(ddd) && telephone.getNumber().equals(number)) {
-                    System.out.println(Color.RED + "Contato já existente" + Color.RESET);
-                    return false;
-                }
-            }
-        }
-        return true;
+        return contactList.stream()
+                .flatMap(contact -> contact.getPhones().stream())
+                .anyMatch(phone -> phone.getDdd().equals(ddd) && phone.getNumber().equals(number));
     }
 
-    public boolean validIdContact(Long id) {
-        for (Contact contact : contactList) {
-            if (Objects.equals(id, contact.getId())) {
-                return true;
-            }
-        }
-        return false;
+    public boolean validContactId(Long id) {
+        return contactList.stream()
+                .anyMatch(contact -> Objects.equals(id, contact.getId()));
     }
 
-    public boolean validIdTelephone(Long idContact, Long idTelephone) {
-        Contact contact = read(idContact);
-        for (Telephone telephone : contact.getTelephones()) {
-            if (Objects.equals(idTelephone, telephone.getId())) {
-                return true;
-            }
-        }
-        return false;
+    public boolean validPhoneId(Long contactId, Long phoneId) {
+        Contact contact = read(contactId);
+        return contact.getPhones().stream()
+                .anyMatch(telephone -> Objects.equals(phoneId, telephone.getId()));
     }
 
-    public Long nextContactId(){
+    public Long nextContactId() {
         Contact contact = contactList.getLast();
         return contact.getId() + 1L;
     }
-    public Long nextPhoneId(Long idContact){
-        Contact contact = read(idContact);
-        return contact.getTelephones().getLast().getId() + 1L;
+
+    public Long nextPhoneId(Long contactId) {
+        Contact contact = read(contactId);
+        return contact.getPhones().getLast().getId() + 1L;
     }
 }

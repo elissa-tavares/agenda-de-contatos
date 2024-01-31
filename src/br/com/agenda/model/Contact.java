@@ -1,16 +1,13 @@
 package br.com.agenda.model;
 
-import br.com.agenda.repository.ContactRepository;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Contact {
     private Long id;
     private String name;
     private String surname;
-    private final List<Telephone> telephones = new ArrayList<>();
+    private final List<Telephone> phones = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -36,12 +33,12 @@ public class Contact {
         return surname;
     }
 
-    public List<Telephone> getTelephones() {
-        return telephones;
+    public List<Telephone> getPhones() {
+        return phones;
     }
 
-    public void addTelephones(Telephone newTelephone) {
-        this.telephones.add(newTelephone);
+    public void addPhone(Telephone newTelephone) {
+        this.phones.add(newTelephone);
     }
 
 }

@@ -19,30 +19,30 @@ public class ContactService {
         return ((option == 1) || (option == 3) || (option == 4)) && contactRepository.isEmpty();
     }
 
-    public boolean phoneBookNotFound(int option, Long idContact) {
-        return ((option == 2) || (option == 3)) && contactRepository.emptyPhoneBook(idContact);
+    public boolean phoneBookNotFound(int option, Long contactId) {
+        return ((option == 2) || (option == 3)) && contactRepository.emptyPhoneBook(contactId);
     }
 
     public String displayList() {
         return contactRepository.displayList();
     }
 
-    public String phoneDisplayList(Long idContact){
-        return contactRepository.phoneDisplayList(idContact);
+    public String phoneDisplayList(Long contactId) {
+        return contactRepository.phoneDisplayList(contactId);
     }
 
-    public boolean validateContactId(Long idContact) {
-        return contactRepository.verificationIdContact(idContact);
+    public boolean validateContactId(Long contactId) {
+        return contactRepository.contactIdVerification(contactId);
     }
 
-    public Long setIdContact() {
+    public Long setContactId() {
         return contactRepository.isEmpty() ? 0L : contactRepository.nextContactId();
     }
 
     public void create(Contact contact, Telephone telephone) {
-        contact.setId(setIdContact());
+        contact.setId(setContactId());
         telephone.setId(0L);
-        contact.addTelephones(telephone);
+        contact.addPhone(telephone);
         contactRepository.save(contact);
     }
 
@@ -50,25 +50,25 @@ public class ContactService {
         contactRepository.delete(id);
     }
 
-    public void createTelephone(Long idContact, Telephone telephone) {
-        telephone.setId(telephoneService.setId(idContact));
-        contactRepository.saveTelephone(idContact, telephone);
+    public void createTelephone(Long contactId, Telephone telephone) {
+        telephone.setId(telephoneService.setId(contactId));
+        contactRepository.savePhone(contactId, telephone);
     }
 
-    public void deleteTelephone(Long idContact, Long idTelephone) {
-        contactRepository.deleteTelephone(idTelephone, idContact);
+    public void deleteTelephone(Long contactId, Long idTelephone) {
+        contactRepository.deletePhone(idTelephone, contactId);
     }
 
-//    public void updateNumber(Long idTelephone, Long idContact) {
-//        if (contactRepository.emptyPhoneBook(idContact)) {
+//    public void updateNumber(Long idTelephone, Long contactId) {
+//        if (contactRepository.emptyPhoneBook(contactId)) {
 //            System.out.println(Color.YELLOW + "Não há nenhum telefone registrado nesse contato" + Color.RESET);
 //        }
 //        //caso contrario edita aqui
 //
 //    }
 
-//    public void updateName(String[] fullName, Long idContact) {
-//        contactRepository.updateName(fullName[0], fullName[1], idContact);
+//    public void updateName(String[] fullName, Long contactId) {
+//        contactRepository.updateName(fullName[0], fullName[1], contactId);
 //    }
 
 //    public void terminate() {

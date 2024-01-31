@@ -1,9 +1,7 @@
 import br.com.agenda.controller.ContactController;
 
-import java.io.FileNotFoundException;
-
 public class Agenda {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         ContactController controller = new ContactController();
 
         int option;
@@ -15,6 +13,7 @@ public class Agenda {
                 case 3 -> controller.delete();
                 case 4 -> controller.update();
                 case 5 -> controller.terminate();
+                default -> controller.error();
             }
         } while (option != 5);
     }

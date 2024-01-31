@@ -25,39 +25,32 @@ public class ContactController {
         System.out.println(" 2 - Adicionar Contato");
         System.out.println(" 3 - Remover Contato  ");
         System.out.println(" 4 - Editar Contato   ");
-        System.out.println(Color.RED + " 5 - Sair" + Color.RESET);
+        System.out.println(Color.RED + " 5 - Sair\n" + Color.RESET);
         System.out.print("Digite uma opção: ");
 
         int option = inputOption();
         if (contactService.listNotFound(option)) {
-            System.out.println(Color.YELLOW + "Agenda de contatos vazia" + Color.RESET);
+            System.out.println(Color.YELLOW + "Agenda de contatos vazia\n" + Color.RESET);
             return menu();
         }
         return option;
     }
 
-    public int editMenu(Long idContact) {
-        System.out.println("   >>>> Menu <<<<    ");
+    public int editMenu() {
+        System.out.println("   >>>>" + Color.YELLOW + " Edição " + Color.RESET + "<<<<    ");
         System.out.println(" 1 - Inserir Telefone  ");
         System.out.println(" 2 - Remover Telefone");
         System.out.println(" 3 - Editar Telefone  ");
         System.out.println(" 4 - Editar Nome   ");
-        System.out.println(Color.RED + " 5 - Sair" + Color.RESET);
+        System.out.println(Color.RED + " 5 - Voltar para o menu anterior\n" + Color.RESET);
         System.out.print("Digite uma opção: ");
 
-        int option = inputOption();
-        if (contactService.phoneBookNotFound(option, idContact)) {
-            System.out.println(Color.YELLOW + "Lista telefônica vazia" + Color.RESET);
-            return editMenu(idContact);
-        }
-        return option;
-    }
-
-    public void read() {
-        System.out.println(contactService.displayList());
+        return inputOption();
     }
 
     public void create() {
+        System.out.println(Color.YELLOW + "-> Adicionar contato" + Color.RESET);
+
         Contact contact = new Contact();
 
         System.out.print("Nome: ");
@@ -65,34 +58,55 @@ public class ContactController {
 
         System.out.print("Sobrenome: ");
         contact.setSurname(scanner.nextLine());
-        contactService.create(contact, inputTelephone());
+
+        contactService.create(contact, inputPhone());
+        System.out.println(Color.GREEN + "Contato adicionado com sucesso\n" + Color.RESET);
+
+    }
+
+    public void read() {
+        System.out.println(contactService.displayList());
+    }
+
+    public void update() { //melhorar isso
+        System.out.println(Color.YELLOW + "-> Editar contato" + Color.RESET);
+        int option;
+        Long contactId;
+
+        do {
+            option = editMenu();
+            if (option == 5) {
+                break;
+            }
+            System.out.println(contactService.displayList());
+            System.out.print("Digite o ID do" + Color.YELLOW + " contato " + Color.RESET + "que deseja editar: ");
+            contactId = inputContactId();
+            scanner.nextLine();
+
+            if (contactService.phoneBookNotFound(option, contactId)) {
+                System.out.println(Color.YELLOW + "Lista telefônica vazia\n" + Color.RESET);
+                continue;
+            }
+
+            switch (option) {
+                case 1 -> contactService.createTelephone(contactId, inputPhone());
+                case 2 -> contactService.deleteTelephone(contactId, inputPhoneId(contactId));
+                //case 3 -> contactService.updateNumber(inputPhoneId(contactId), contactId);
+                //case 4 -> contactService.updateName(inputName(), contactId);
+                default -> error();
+            }
+        } while (true);
     }
 
     public void delete() {
+        System.out.println(Color.YELLOW + "-> Remover contato" + Color.RESET);
+
         System.out.println(contactService.displayList());
         System.out.print("Digite o ID do contato que deseja remover: ");
-        Long id = inputIdContact();
+        Long id = inputContactId();
+
         contactService.delete(id);
-    }
-
-    public void update() {
-        int option;
-        Long id;
-
-        do {
-            System.out.println(contactService.displayList());
-            System.out.println("Digite o ID do" + Color.YELLOW + " contato " + Color.RESET + "que deseja editar.");
-            id = inputIdContact();
-
-            option = editMenu(id);
-
-            switch (option) {
-                case 1 -> contactService.createTelephone(id, inputTelephone());
-                case 2 -> contactService.deleteTelephone(id, inputIdTelephone(id));
-                //case 3 -> contactService.updateNumber(inputIdTelephone(id), id);
-                //case 4 -> contactService.updateName(inputName(), id);
-            }
-        } while (option != 5);
+        System.out.println(Color.GREEN + "Contato removido com sucesso\n" + Color.RESET);
     }
 
     public void terminate() {
@@ -100,91 +114,77 @@ public class ContactController {
         scanner.close();
     }
 
+    public void error() {
+        System.out.println(Color.RED + "Opção inválida" + Color.RESET);
+    }
+
     public int inputOption() {
         try {
             int option = scanner.nextInt();
             scanner.nextLine();
-            if (option == 1 || option == 2 || option == 3 || option == 4 || option == 5) {
-                return option;
-            } else {
-                System.out.println(Color.RED + "Opção inválida" + Color.RESET);
-                return inputOption();
-            }
+            return option;
         } catch (Exception e) {
             scanner.nextLine();
             System.out.println(Color.RED + "Erro: Você deve digitar um número inteiro." + Color.RESET);
-            return inputOption();
+            return menu();
         }
     }
 
-    public Telephone inputTelephone() {
-        boolean validNumber;
+    public Telephone inputPhone() {
+        boolean numberFound;
         System.out.print("Digite o DDD: ");
         String ddd = scanner.nextLine();
 
         System.out.print("Digite o numero: ");
         Long number = scanner.nextLong();
 
-        validNumber = telephoneService.validNumber(ddd, number);
+        numberFound = telephoneService.validNumber(ddd, number);
 
-        if (!validNumber) {
+        if (numberFound) {
             System.out.println(Color.RED + "Telefone já existente." + Color.RESET);
             scanner.nextLine();
-            return inputTelephone();
+            return inputPhone();
         }
         return new Telephone(ddd, number);
     }
 
-    public Long inputIdContact() {
-        boolean validId;
+    public Long inputContactId() {
+        boolean idFound;
         Long id = inputId();
-        validId = contactService.validateContactId(id);
+        idFound = contactService.validateContactId(id);
 
-        if (!validId) {
+        if (!idFound) {
             System.out.print(Color.RED + "ID inexistente. Digite um ID valido: " + Color.RESET);
             scanner.nextLine();
-            return inputIdContact();
+            return inputContactId();
         }
         return id;
     }
 
-    public Long inputIdTelephone(Long idContact) {
-        System.out.println(contactService.phoneDisplayList(idContact));
-        System.out.print("Digite o ID do" + Color.YELLOW + " telefone " + Color.RESET + "que deseja editar: ");
+    public Long inputPhoneId(Long contactId) {
+        System.out.println(Color.YELLOW + "-> Lista telefônica do contato " + contactId + Color.RESET);
+        System.out.println(contactService.phoneDisplayList(contactId));
+        System.out.print("Digite o ID do" + Color.YELLOW + " telefone: " + Color.RESET);
 
-        boolean validId;
+        boolean idFound;
         Long id = inputId();
-        validId = telephoneService.validatePhoneId(id, idContact);
+        idFound = telephoneService.validatePhoneId(id, contactId);
 
-        if (!validId) {
+        if (!idFound) {
             System.out.print(Color.RED + "ID inexistente. Digite um ID valido: " + Color.RESET);
             scanner.nextLine();
-            return inputIdContact();
+            return inputContactId();
         }
         return id;
     }
 
     public Long inputId() {
         try {
-            Long id = scanner.nextLong();
-            scanner.nextLong();
-            return id;
+            return scanner.nextLong();
         } catch (Exception e) {
             scanner.nextLine();
             System.out.print(Color.RED + "O ID deve ser um número. " + Color.RESET + "Digite novamente: ");
             return inputId();
         }
     }
-
-//    public String[] inputName() {
-//        String[] fullName = new String[2];
-//
-//        System.out.print("Nome: ");
-//        fullName[0] = scanner.nextLine();
-//
-//        System.out.print("Sobrenome: ");
-//        fullName[1] = scanner.nextLine();
-//
-//        return fullName;
-//    }
 }
