@@ -22,10 +22,10 @@ public class TelephoneService {
     }
 
     public String formatsDDD(String ddd) {
-        return ddd.replaceAll("[^0-9-]", "");
-    }
-
-    public boolean invalidDDD(String ddd){
-        return ddd.isEmpty();
+        ddd = ddd.replaceAll("[^\\d+-]|\\++|\\--", "");
+        if (ddd.matches("[+-]+")) {
+            ddd = "";
+        }
+        return ddd;
     }
 }

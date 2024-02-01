@@ -30,7 +30,7 @@ public class ContactController {
         int option = inputOption();
 
         if (contactService.listNotFound(option)) {
-            System.out.println(Color.YELLOW + "br.com.agenda.app.App de contatos vazia" + Color.RESET);
+            System.out.println(Color.YELLOW + "Agenda de contatos vazia" + Color.RESET);
             return menu();
         }
         return option;
@@ -59,25 +59,22 @@ public class ContactController {
 
     public void update() { //melhorar isso
         System.out.println(Color.YELLOW + "\n-> Editar contato" + Color.RESET);
-        int option;
-        Long contactId;
-
         System.out.print(contactService.displayList());
         System.out.print("Digite o ID do" + Color.YELLOW + " contato " + Color.RESET + "que deseja editar: ");
-        contactId = inputContactId();
+        Long contactId = inputContactId();
         scanner.nextLine();
-
-        option = editMenu();
+        int option = editMenu();
 
         if (contactService.phoneBookNotFound(option, contactId)) {
             System.out.println(Color.YELLOW + "Lista telefônica vazia" + Color.RESET);
+            return;
         }
 
         switch (option) {
-            case 1 -> createPhone(contactId);
-            case 2 -> deletePhone(contactId);
+            case 1 -> contactService.createPhone(contactId, inputPhone());
+            case 2 -> contactService.deletePhone(contactId, inputPhoneId(contactId));
             case 3 -> updateNumber(contactId);
-            case 4 -> updateName(contactId);
+            case 4 -> contactService.updateName(contactId, inputName());
             default -> error();
         }
     }
@@ -102,26 +99,10 @@ public class ContactController {
         System.out.println(Color.RED + "Opção inválida" + Color.RESET);
     }
 
-    public void createPhone(Long contactId){
-        contactService.createPhone(contactId, inputPhone());
-        System.out.println(Color.GREEN + "Telephone adicionado com sucesso" + Color.RESET);
-    }
-
-    public void updateNumber(Long contactId){
+    public void updateNumber(Long contactId) {
         Long phoneId = inputPhoneId(contactId); //guarda como long
         scanner.nextLine(); //consumes the line because it receives a ddd as nextLine
         contactService.updateNumber(contactId, phoneId, inputPhone());
-        System.out.println(Color.GREEN + "Telefone atualizado com sucesso" + Color.RESET);
-    }
-
-    public void updateName(Long contactId){
-        contactService.updateName(contactId, inputName());
-        System.out.println(Color.GREEN + "Nome atualizado com sucesso" + Color.RESET);
-    }
-
-    public void deletePhone(Long contactId){
-        contactService.deletePhone(contactId, inputPhoneId(contactId));
-        System.out.println(Color.GREEN + "Telefone removido com sucesso" + Color.RESET);
     }
 
     public int inputOption() {
@@ -136,7 +117,7 @@ public class ContactController {
         }
     }
 
-    public Contact inputName(){
+    public Contact inputName() {
         Contact contact = new Contact();
 
         System.out.print("Nome: ");
@@ -144,6 +125,10 @@ public class ContactController {
 
         System.out.print("Sobrenome: ");
         contact.setSurname(scanner.nextLine());
+
+        if (contactService.invalidName(contact)) {
+            return inputName();
+        }
 
         return contact;
     }
@@ -153,7 +138,7 @@ public class ContactController {
         System.out.print("Digite o DDD: ");
         String ddd = telephoneService.formatsDDD(scanner.nextLine());
 
-        if (telephoneService.invalidDDD(ddd)){
+        if (ddd.isBlank()) {
             System.out.println(Color.RED + "DDD inválido. " + Color.RESET + "Tente novamente.");
             return inputPhone();
         }
@@ -170,7 +155,7 @@ public class ContactController {
             }
             return new Telephone(ddd, number);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             scanner.nextLine();
             System.out.println(Color.RED + "Você deve digitar um número inteiro. " + Color.RESET + "Tente novamente.");
             return inputPhone();

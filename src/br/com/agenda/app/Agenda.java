@@ -2,12 +2,11 @@ package br.com.agenda.app;
 
 import br.com.agenda.controller.ContactController;
 
-public class App {
+public class Agenda {
     ContactController controller;
-    public App() {
+    public Agenda() {
         controller = new ContactController();
     }
-
 
     public void run() {
         int option;

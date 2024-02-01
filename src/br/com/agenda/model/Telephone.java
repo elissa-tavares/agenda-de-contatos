@@ -1,8 +1,5 @@
 package br.com.agenda.model;
 
-import br.com.agenda.repository.ContactRepository;
-import br.com.agenda.service.TelephoneService;
-
 public class Telephone {
     private Long id;
     private String ddd;
