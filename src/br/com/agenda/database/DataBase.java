@@ -21,27 +21,42 @@ public class DataBase {
     }
 
     public void createPhone(Long contactId, Telephone Phone) {
-        Contact contact = read(contactId);
+        Contact contact = readContact(contactId);
         contact.addPhone(Phone);
     }
 
-    public Contact read(Long id) {
+    public Contact readContact(Long id) {
         return contactList.stream()
                 .filter(contact -> Objects.equals(id, contact.getId()))
                 .findFirst().get();
     }
 
-    public void update() {
+    public Telephone readPhone(Long contactId, Long phoneId) {
+        Contact contact = readContact(contactId);
+        return contact.getPhones().stream()
+                .filter(telephone -> Objects.equals(phoneId, telephone.getId()))
+                .findFirst().get();
+    }
 
+    public void updatePhone(Long contactId, Long phoneId, Telephone newPhone) {
+        Telephone oldPhone = readPhone(contactId, phoneId);
+        oldPhone.setDdd(newPhone.getDdd());
+        oldPhone.setNumber(newPhone.getNumber());
+    }
+
+    public void updateName(Long contactId, Contact newContact) {
+        Contact oldContact = readContact(contactId);
+        oldContact.setName(newContact.getName());
+        oldContact.setSurname(newContact.getSurname());
     }
 
     public void delete(Long id) {
-        Contact contact = read(id);
+        Contact contact = readContact(id);
         contactList.remove(contact);
     }
 
     public void deletePhone(Long contactId, Long phoneId) {
-        Contact contact = read(contactId);
+        Contact contact = readContact(contactId);
         Telephone telephone = contact.getPhones().stream()
                 .filter(phone -> Objects.equals(phoneId, phone.getId()))
                 .findFirst().get();
@@ -53,7 +68,7 @@ public class DataBase {
     }
 
     public boolean emptyPhoneBook(Long id) {
-        Contact contact = read(id);
+        Contact contact = readContact(id);
         return contact.getPhones().isEmpty();
     }
 
@@ -88,7 +103,7 @@ public class DataBase {
     }
 
     public boolean validPhoneId(Long contactId, Long phoneId) {
-        Contact contact = read(contactId);
+        Contact contact = readContact(contactId);
         return contact.getPhones().stream()
                 .anyMatch(telephone -> Objects.equals(phoneId, telephone.getId()));
     }
@@ -99,7 +114,8 @@ public class DataBase {
     }
 
     public Long nextPhoneId(Long contactId) {
-        Contact contact = read(contactId);
+        Contact contact = readContact(contactId);
         return contact.getPhones().getLast().getId() + 1L;
     }
+
 }

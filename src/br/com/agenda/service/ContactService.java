@@ -46,6 +46,18 @@ public class ContactService {
         contactRepository.save(contact);
     }
 
+    public void updateNumber(Long contactId, Long phoneId, Telephone newNumber) {
+        Telephone phone = contactRepository.getPhone(contactId, phoneId);
+        //implementa regras de negocio aqui parar comprar se o telefone igual
+        contactRepository.updatePhone(contactId, phoneId, newNumber);
+    }
+
+    public void updateName(Long contactId, Contact newContact) {
+        Contact contact = contactRepository.getContact(contactId);
+        //implementa regras de negocio aqui parar comprar se o telefone igual
+        contactRepository.updateName(contactId, newContact);
+    }
+
     public void delete(Long id) {
         contactRepository.delete(id);
     }
@@ -58,22 +70,5 @@ public class ContactService {
     public void deleteTelephone(Long contactId, Long idTelephone) {
         contactRepository.deletePhone(idTelephone, contactId);
     }
-
-//    public void updateNumber(Long idTelephone, Long contactId) {
-//        if (contactRepository.emptyPhoneBook(contactId)) {
-//            System.out.println(Color.YELLOW + "Não há nenhum telefone registrado nesse contato" + Color.RESET);
-//        }
-//        //caso contrario edita aqui
-//
-//    }
-
-//    public void updateName(String[] fullName, Long contactId) {
-//        contactRepository.updateName(fullName[0], fullName[1], contactId);
-//    }
-
-//    public void terminate() {
-//        //essa funcao vai servir pra salvar a lista no arquivo de texto
-//    }
-
 
 }
