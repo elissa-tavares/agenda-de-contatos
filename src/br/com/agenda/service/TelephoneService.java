@@ -22,7 +22,8 @@ public class TelephoneService {
     }
 
     public String formatsDDD(String ddd) {
-        ddd = ddd.replaceAll("[^\\d+-]|\\++|\\--", "");
+        ddd = ddd.replaceAll("[^\\d-+]", "");
+
         if (ddd.matches("[+-]+")) {
             ddd = "";
         }
