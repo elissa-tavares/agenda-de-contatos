@@ -44,7 +44,7 @@ public class DataBase {
         oldPhone.setNumber(newPhone.getNumber());
     }
 
-    public void updateName(Long contactId, Contact newContact) {
+    public void updateName(Long contactId, Contact newContact){
         Contact oldContact = readContact(contactId);
         oldContact.setName(newContact.getName());
         oldContact.setSurname(newContact.getSurname());

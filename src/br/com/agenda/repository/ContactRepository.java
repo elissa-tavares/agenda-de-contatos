@@ -49,7 +49,7 @@ public class ContactRepository {
         return database.readPhone(contactId, phoneId);
     }
 
-    public Contact getContact(Long contactId){
+    public Contact getContact(Long contactId) {
         return database.readContact(contactId);
     }
 
@@ -57,7 +57,7 @@ public class ContactRepository {
         database.updatePhone(contactId, phoneId, newPhone);
     }
 
-    public void updateName(Long contactId, Contact newContact){
+    public void updateName(Long contactId, Contact newContact) {
         database.updateName(contactId, newContact);
     }
 

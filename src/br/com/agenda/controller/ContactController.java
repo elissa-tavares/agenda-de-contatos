@@ -30,7 +30,7 @@ public class ContactController {
         int option = inputOption();
 
         if (contactService.listNotFound(option)) {
-            System.out.println(Color.YELLOW + "Agenda de contatos vazia" + Color.RESET);
+            System.out.println(Color.YELLOW + "br.com.agenda.app.App de contatos vazia" + Color.RESET);
             return menu();
         }
         return option;
@@ -47,7 +47,6 @@ public class ContactController {
         return inputOption();
     }
 
-
     public void create() {
         System.out.println(Color.YELLOW + "\n-> Adicionar contato" + Color.RESET);
         contactService.create(inputName(), inputPhone());
@@ -57,7 +56,6 @@ public class ContactController {
     public void read() {
         System.out.println(contactService.displayList());
     }
-
 
     public void update() { //melhorar isso
         System.out.println(Color.YELLOW + "\n-> Editar contato" + Color.RESET);
@@ -76,10 +74,10 @@ public class ContactController {
         }
 
         switch (option) {
-            case 1 -> contactService.createTelephone(contactId, inputPhone());
-            case 2 -> contactService.deleteTelephone(contactId, inputPhoneId(contactId));
-            case 3 -> contactService.updateNumber(contactId, inputPhoneId(contactId), inputPhone());
-            case 4 -> contactService.updateName(contactId, inputName());
+            case 1 -> createPhone(contactId);
+            case 2 -> deletePhone(contactId);
+            case 3 -> updateNumber(contactId);
+            case 4 -> updateName(contactId);
             default -> error();
         }
     }
@@ -104,16 +102,26 @@ public class ContactController {
         System.out.println(Color.RED + "Opção inválida" + Color.RESET);
     }
 
-    public Contact inputName(){
-        Contact contact = new Contact();
+    public void createPhone(Long contactId){
+        contactService.createPhone(contactId, inputPhone());
+        System.out.println(Color.GREEN + "Telephone adicionado com sucesso" + Color.RESET);
+    }
 
-        System.out.print("Nome: ");
-        contact.setName(scanner.nextLine());
+    public void updateNumber(Long contactId){
+        Long phoneId = inputPhoneId(contactId); //guarda como long
+        scanner.nextLine(); //consumes the line because it receives a ddd as nextLine
+        contactService.updateNumber(contactId, phoneId, inputPhone());
+        System.out.println(Color.GREEN + "Telefone atualizado com sucesso" + Color.RESET);
+    }
 
-        System.out.print("Sobrenome: ");
-        contact.setSurname(scanner.nextLine());
+    public void updateName(Long contactId){
+        contactService.updateName(contactId, inputName());
+        System.out.println(Color.GREEN + "Nome atualizado com sucesso" + Color.RESET);
+    }
 
-        return contact;
+    public void deletePhone(Long contactId){
+        contactService.deletePhone(contactId, inputPhoneId(contactId));
+        System.out.println(Color.GREEN + "Telefone removido com sucesso" + Color.RESET);
     }
 
     public int inputOption() {
@@ -128,22 +136,45 @@ public class ContactController {
         }
     }
 
+    public Contact inputName(){
+        Contact contact = new Contact();
+
+        System.out.print("Nome: ");
+        contact.setName(scanner.nextLine());
+
+        System.out.print("Sobrenome: ");
+        contact.setSurname(scanner.nextLine());
+
+        return contact;
+    }
+
     public Telephone inputPhone() {
         boolean numberFound;
         System.out.print("Digite o DDD: ");
-        String ddd = scanner.nextLine();
+        String ddd = telephoneService.formatsDDD(scanner.nextLine());
 
-        System.out.print("Digite o numero: ");
-        Long number = scanner.nextLong();
-
-        numberFound = telephoneService.validNumber(ddd, number);
-
-        if (numberFound) {
-            System.out.println(Color.RED + "Telefone já existente." + Color.RESET);
-            scanner.nextLine();
+        if (telephoneService.invalidDDD(ddd)){
+            System.out.println(Color.RED + "DDD inválido. " + Color.RESET + "Tente novamente.");
             return inputPhone();
         }
-        return new Telephone(ddd, number);
+
+        try {
+            System.out.print("Digite o numero: ");
+            Long number = scanner.nextLong();
+
+            numberFound = telephoneService.validNumber(ddd, number);
+            if (numberFound) {
+                System.out.println(Color.RED + "Telefone já existente." + Color.RESET);
+                scanner.nextLine();
+                return inputPhone();
+            }
+            return new Telephone(ddd, number);
+
+        } catch (Exception e){
+            scanner.nextLine();
+            System.out.println(Color.RED + "Você deve digitar um número inteiro. " + Color.RESET + "Tente novamente.");
+            return inputPhone();
+        }
     }
 
     public Long inputContactId() {

@@ -20,4 +20,12 @@ public class TelephoneService {
     public Long setId(Long contactId) {
         return contactRepository.emptyPhoneBook(contactId) ? 0L : contactRepository.nextPhoneId(contactId);
     }
+
+    public String formatsDDD(String ddd) {
+        return ddd.replaceAll("[^0-9-]", "");
+    }
+
+    public boolean invalidDDD(String ddd){
+        return ddd.isEmpty();
+    }
 }

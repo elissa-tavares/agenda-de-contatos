@@ -1,9 +1,15 @@
+package br.com.agenda.app;
+
 import br.com.agenda.controller.ContactController;
 
-public class Agenda {
-    public static void main(String[] args) {
-        ContactController controller = new ContactController();
+public class App {
+    ContactController controller;
+    public App() {
+        controller = new ContactController();
+    }
 
+
+    public void run() {
         int option;
         do {
             option = controller.menu();

@@ -26,8 +26,6 @@ public class Telephone {
     }
 
     public void setDdd(String ddd) {
-        ddd = ddd.replaceAll(" ", "");
-        ddd = ddd.replaceAll("\n", "");
         this.ddd = ddd;
     }
 
