@@ -60,6 +60,10 @@ public class ContactService {
         System.out.println(Color.GREEN + "Telefone removido com sucesso" + Color.RESET);
     }
 
+    public void terminate(){
+        contactRepository.terminate();
+    }
+
     public boolean listNotFound(int option) {
         return ((option == 1) || (option == 3) || (option == 4)) && contactRepository.isEmpty();
     }

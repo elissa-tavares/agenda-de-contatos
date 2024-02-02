@@ -7,7 +7,7 @@ public class Contact {
     private Long id;
     private String name;
     private String surname;
-    private final List<Telephone> phones = new ArrayList<>();
+    private List<Telephone> phones = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -19,6 +19,10 @@ public class Contact {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPhones(List<Telephone> listPhone){
+        this.phones = listPhone;
     }
 
     public String getName() {
@@ -40,5 +44,4 @@ public class Contact {
     public void addPhone(Telephone newTelephone) {
         this.phones.add(newTelephone);
     }
-
 }

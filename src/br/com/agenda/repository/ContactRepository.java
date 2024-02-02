@@ -81,5 +81,8 @@ public class ContactRepository {
     public boolean phoneIdVerification(Long idPhone, long contactId) {
         return database.validPhoneId(contactId, idPhone);
     }
+    public void terminate(){
+        database.terminate();
+    }
 
 }

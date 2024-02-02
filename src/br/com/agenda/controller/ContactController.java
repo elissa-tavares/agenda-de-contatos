@@ -91,7 +91,7 @@ public class ContactController {
     }
 
     public void terminate() {
-        //contactService.terminate();
+        contactService.terminate();
         scanner.close();
     }
 

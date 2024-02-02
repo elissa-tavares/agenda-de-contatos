@@ -4,16 +4,37 @@ import br.com.agenda.controller.Color;
 import br.com.agenda.model.Contact;
 import br.com.agenda.model.Telephone;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DataBase {
 
-    private final List<Contact> contactList;
+    private static List<Contact> contactList;
+    private static Converter converter;
+    private static String file;
+    
 
     public DataBase() {
         contactList = new ArrayList<>();
+        converter = new Converter();
+        file = "src/br/com/agenda/database/contacts.txt";
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Contact contact = converter.getContact(line);
+                contactList.add(contact);
+            }
+            reader.close();
+
+        } catch (Exception e) {
+            System.out.println(Color.RED + "Arquivo não encontrada" + Color.RESET);
+        }
     }
 
     public void create(Contact contact) {
@@ -118,4 +139,25 @@ public class DataBase {
         return contact.getPhones().getLast().getId() + 1L;
     }
 
+    public void terminate(){
+        String formatted = "";
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                int i = 0;
+                while (i < contactList.size()) {
+                    Contact contact = contactList.get(i);
+                    formatted = contact.getId() + ";" + contact.getName() + ";" + contact.getSurname() + "/";
+                        
+                    for (Telephone telephone : contact.getPhones()) {
+                        formatted += telephone.getId() + ";" + telephone.getDdd() + ";" + Long.toString(telephone.getNumber()) + "/";
+                    }
+                    writer.write(formatted);
+                    writer.newLine();
+                    formatted = "";
+                    i++;
+                }
+                writer.close();
+        } catch (Exception e) {
+            System.out.println("Não foi possível salvar os dados em arquivo");
+        } 
+    }
 }
